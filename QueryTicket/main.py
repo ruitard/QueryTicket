@@ -93,8 +93,5 @@ def prepare():
             return "", "202210", {"reason": "时间格式错误"}
     config.train_date = request.args.get("train_date", time.strftime("%Y-%m-%d", time.localtime()))
 
-def run():
-    app.run()
-
 if __name__ == "__main__":
-    run()
+    app.run()
