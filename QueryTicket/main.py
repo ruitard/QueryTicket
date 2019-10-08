@@ -23,7 +23,6 @@ def hello_world():
     data = r.json()["data"]
     
     config.station_map = data["map"]
-    # config.train_date = train_date
 
     result = data["result"]
     result = tuple(map(handler, result))
@@ -94,5 +93,8 @@ def prepare():
             return "", "202210", {"reason": "时间格式错误"}
     config.train_date = request.args.get("train_date", time.strftime("%Y-%m-%d", time.localtime()))
 
-if __name__ == "__main__":
+def run():
     app.run()
+
+if __name__ == "__main__":
+    run()
