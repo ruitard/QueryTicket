@@ -11,8 +11,7 @@ rcookies = requests.get(config.base_url).cookies
 config.cookies = {key: rcookies[key] for key in rcookies.keys()}
 
 @app.route('/', methods=["GET"])
-def hello_world():
-    ret = dict()
+def queryticket():
     params = {
         "leftTicketDTO.train_date": config.train_date,
         "leftTicketDTO.from_station": config.from_station,
@@ -20,16 +19,14 @@ def hello_world():
         "purpose_codes": "ADULT"
     }
     r = requests.get(config.query_url, params=params, cookies=config.cookies)
+    while not r.json()["status"]:
+        config.query_url = "https://kyfw.12306.cn/otn/{}".format(r.json()["c_url"])
+        r = requests.get(config.query_url, params=params, cookies=config.cookies)
     data = r.json()["data"]
-    
     config.station_map = data["map"]
-
     result = data["result"]
-    result = tuple(map(handler, result))
-    ret["error_code"] = 0
-    ret["reason"] = config.error_code_map[ret["error_code"]]
-    ret["result"] = result
-    return ret 
+    result = {"result": tuple(map(handler, result))}
+    return result, "200 OK", {"reason": "查询成功"}
 
 def handler(train: str) -> dict:
     train = train.split('|')
@@ -74,6 +71,8 @@ def handler(train: str) -> dict:
 
 @app.before_request
 def prepare():
+    if not request.args:
+        return "", "202208", {"reason": "参数错误"}
     if "start_station" not in request.args:
         return "", "202208", {"reason": "参数错误"}
     if "end_station" not in request.args:

@@ -1,6 +1,6 @@
 base_url = "https://kyfw.12306.cn/otn/leftTicket/init"
 
-query_url = "https://kyfw.12306.cn/otn/leftTicket/queryA"
+query_url = "https://kyfw.12306.cn/otn/leftTicket/query"
 
 price_url = "https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice"
 
@@ -44,6 +44,6 @@ error_code_map = {
     202212: "查询出错"
 }
 
-with open("station2code.json", 'r') as fp:
+with open("station2code.json", 'rt') as fp:
     import json
     station2code_map = json.load(fp)
