@@ -26,7 +26,8 @@ def queryticket():
     config.station_map = data["map"]
     result = data["result"]
     result = {"result": tuple(map(handler, result))}
-    return result, "200 OK", {"reason": "查询成功"}
+    return result 
+    # return result, "200 OK", {"reason": "查询成功"}
 
 def handler(train: str) -> dict:
     train = train.split('|')
@@ -72,24 +73,24 @@ def handler(train: str) -> dict:
 @app.before_request
 def prepare():
     if not request.args:
-        return "", "202208", {"reason": "参数错误"}
+        return "", "202208", {}
     if "start_station" not in request.args:
-        return "", "202208", {"reason": "参数错误"}
+        return "", "202208", {}
     if "end_station" not in request.args:
-        return "", "202208", {"reason": "参数错误"}
+        return "", "202208", {}
     start = request.args["start_station"]
     end = request.args["end_station"]
     if start not in config.station2code_map:
-        return "", "202205", {"reason": "出发站名称错误"}
+        return "", "202205", {}
     if end not in config.station2code_map:
-        return "", "202206", {"reason": "到达站名称错误"}
+        return "", "202206", {}
     config.from_station = config.station2code_map[start]
     config.to_station = config.station2code_map[end]
     if "train_date" in request.args:
         try:
             time.strptime(request.args["train_date"], "%Y-%m-%d")
         except:
-            return "", "202210", {"reason": "时间格式错误"}
+            return "", "202210 time", {"reason": "time error"}
     config.train_date = request.args.get("train_date", time.strftime("%Y-%m-%d", time.localtime()))
 
 if __name__ == "__main__":

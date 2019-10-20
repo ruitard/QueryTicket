@@ -3,6 +3,6 @@ services:
   master:
     build: .
     image: queryticket
-    ports:
-      - "12306:80"
+  server:
+    image: nginx:stable
 restart: always
